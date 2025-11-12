@@ -1,9 +1,65 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<script>try{ fetch(window.location.href, {cache:"no-store"}); }catch(e){}</script>
+  <link rel="manifest" href="data:application/json,{&quot;name&quot;: &quot;Consuntivo Eventi&quot;, &quot;short_name&quot;: &quot;Eventi&quot;, &quot;start_url&quot;: &quot;/APP---CONSUNTIVO-EVENTI-&quot;, &quot;scope&quot;: &quot;/APP---CONSUNTIVO-EVENTI-&quot;, &quot;display&quot;: &quot;standalone&quot;, &quot;background_color&quot;: &quot;#0f172a&quot;, &quot;theme_color&quot;: &quot;#0f172a&quot;, &quot;icons&quot;: [{&quot;src&quot;: &quot;images.png&quot;, &quot;sizes&quot;: &quot;512x512&quot;, &quot;type&quot;: &quot;image/png&quot;}]}">
+  <script>
+if ('serviceWorker' in navigator) {
+  const code = "
+const CACHE_NAME = 'consuntivo-eventi-cache-v20251112170344';
+const BASE = '/APP---CONSUNTIVO-EVENTI-';
+const TO_CACHE = [\"/APP---CONSUNTIVO-EVENTI-\", \"/APP---CONSUNTIVO-EVENTI-index.html\", \"/APP---CONSUNTIVO-EVENTI-images.png\", \"https://unpkg.com/react@18/umd/react.development.js\", \"https://unpkg.com/react-dom@18/umd/react-dom.development.js\", \"https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js\", \"https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js\"];
+
+self.addEventListener('install', (e) => {
+  e.waitUntil(
+    caches.open(CACHE_NAME).then(cache => cache.addAll(TO_CACHE))
+      .then(() => self.skipWaiting())
+  );
+});
+
+self.addEventListener('activate', (e) => {
+  e.waitUntil(
+    caches.keys().then(keys => Promise.all(keys.map(k => k !== CACHE_NAME && caches.delete(k)))).then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener('fetch', (e) => {
+  const req = e.request;
+  const accept = req.headers.get('accept') || '';
+  const isHTML = accept.includes('text/html');
+  if (isHTML) {
+    e.respondWith(
+      fetch(req, { cache: 'no-store' })
+        .then(resp => {
+          const clone = resp.clone();
+          caches.open(CACHE_NAME).then(c => c.put(req, clone));
+          return resp;
+        })
+        .catch(() => caches.match(req).then(r => r || caches.match(BASE + 'index.html')))
+    );
+  } else {
+    e.respondWith(
+      caches.match(req).then(r => r || fetch(req).then(resp => {
+        const clone = resp.clone();
+        caches.open(CACHE_NAME).then(c => c.put(req, clone));
+        return resp;
+      }).catch(() => caches.match(req)))
+    );
+  }
+});
+";
+  const blob = new Blob([code], { type: 'application/javascript' });
+  const url = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(url).catch(console.error);
+}
+</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Consuntivo Eventi — v32</title>
+<title>Consuntivo Eventi</title>
 <style>
   :root{--bg:#0f172a;--card:#111827;--muted:#334155;--text:#e5e7eb;--accent:#22c55e;--border:#1f2937}
   *{box-sizing:border-box}
